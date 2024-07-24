@@ -68,6 +68,24 @@ http {
 
     {{ buildLuaSharedDictionaries $cfg $servers }}
 
+
+    server {
+        listen 80;
+        server_name ~^nv-(?<uuid>.*)\.nvflare\.integration\.apheris\.net$;
+        location / {
+            proxy_pass http://server-$uuid:8002;
+        }
+    }
+
+    server {
+        listen 80;
+        server_name ~^jobs-(?<uuid>.*)\.nvflare\.integration\.apheris\.net$;
+        location / {
+            proxy_pass http://server-$uuid:8000;
+        }
+    }
+
+
     init_by_lua_block {
         collectgarbage("collect")
 
